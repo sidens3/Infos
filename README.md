@@ -1,1 +1,1 @@
-# infoArea
+# Infos
