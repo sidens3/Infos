@@ -58,6 +58,11 @@
 		4A5B502D29D47930008CB0D2 /* Infos */ = {
 			isa = PBXGroup;
 			children = (
+				4A5B504529D47DE6008CB0D2 /* ViewControllers */,
+				4A5B504929D47E8C008CB0D2 /* ViewModels */,
+				4A5B504829D47E6C008CB0D2 /* Network */,
+				4A5B504729D47E5D008CB0D2 /* Models */,
+				4A5B504629D47E08008CB0D2 /* Resources */,
 				4A5B502E29D47930008CB0D2 /* AppDelegate.swift */,
 				4A5B503029D47930008CB0D2 /* SceneDelegate.swift */,
 				4A5B503229D47930008CB0D2 /* ViewController.swift */,
@@ -67,6 +72,41 @@
 				4A5B503C29D47933008CB0D2 /* Info.plist */,
 			);
 			path = Infos;
+			sourceTree = "<group>";
+		};
+		4A5B504529D47DE6008CB0D2 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		4A5B504629D47E08008CB0D2 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		4A5B504729D47E5D008CB0D2 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		4A5B504829D47E6C008CB0D2 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
+		4A5B504929D47E8C008CB0D2 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
