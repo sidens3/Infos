@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class NewsTableViewCell: BaseTableViewCell {
 
@@ -13,6 +14,8 @@ class NewsTableViewCell: BaseTableViewCell {
     private var newsImageView: UIImageView = {
         let imageView = UIImageView(frame: .zero)
         imageView.image = UIImage(named: "arrow.triangle.2.circlepath.camera")
+        imageView.layer.cornerRadius = 16
+        imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -31,7 +34,21 @@ class NewsTableViewCell: BaseTableViewCell {
     func configure(for article: Article) {
         setupSubviews()
         
+        titleLabel.text = article.title
+        fetchImage(by: article.urlToImage ?? "") { [weak self] image in
+            self?.newsImageView.image = image
+        }
+    }
+}
+
+// MARK: - Override
+extension NewsTableViewCell {
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
         
+        newsImageView.image = UIImage()
+        titleLabel.text = ""
     }
 }
 
@@ -43,12 +60,13 @@ private extension NewsTableViewCell {
         contentView.addSubview(titleLabel)
 
         NSLayoutConstraint.activate([
+            newsImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
             newsImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             newsImageView.trailingAnchor.constraint(equalTo: titleLabel.leadingAnchor, constant: -16),
-            newsImageView.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
+            newsImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
             
-            newsImageView.heightAnchor.constraint(equalToConstant: 24),
-            newsImageView.widthAnchor.constraint(equalToConstant: 24),
+            newsImageView.heightAnchor.constraint(equalToConstant: 60),
+            newsImageView.widthAnchor.constraint(equalToConstant: 60),
             
             titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
             titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
@@ -56,5 +74,13 @@ private extension NewsTableViewCell {
         ])
         
         setupStyle()
+    }
+    
+    func fetchImage(by string: String, completion: @escaping (UIImage?) -> Void) {
+        guard let url = URL(string: string) else {
+            completion(nil)
+            return
+        }
+        ImageCache.default.fetchImage(url: url, completion: completion)
     }
 }
