@@ -64,7 +64,6 @@ private extension NewsSearchTableViewCell {
             searchBar.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             searchBar.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
             searchBar.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-//            searchBar.heightAnchor.constraint(equalToConstant: 44),
         ])
         
         searchBar.delegate = self
