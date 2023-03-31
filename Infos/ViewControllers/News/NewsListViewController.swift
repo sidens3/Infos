@@ -99,8 +99,10 @@ extension NewsListViewController: UITableViewDataSource {
         let element = viewModel.getElement(at: indexPath.row, section: indexPath.section)
         
         switch element {
-        case .news:
-            return UITableViewCell()
+        case .news(let article):
+            let cell = tableView.dequeue(NewsTableViewCell.self, for: indexPath)
+            cell.configure(for: article)
+            return cell
         }
     }
 }
@@ -128,7 +130,7 @@ private extension NewsListViewController {
         tableView.backgroundColor = .systemBackground
         tableView.rowHeight = UITableView.automaticDimension
         
-        tableView.registerClass(forCell: UITableViewCell.self)
+        tableView.registerClass(forCell: NewsTableViewCell.self)
         
         navigationItem.title = Constants.title
     }
