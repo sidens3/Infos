@@ -97,6 +97,9 @@ extension NewsListViewController: UITableViewDelegate {
         
         switch element {
         case .news:
+            // TODO: add navigate to news details
+            break
+        case .search:
             break
         }
     }
@@ -123,7 +126,19 @@ extension NewsListViewController: UITableViewDataSource {
             let cell = tableView.dequeue(NewsTableViewCell.self, for: indexPath)
             cell.configure(for: article)
             return cell
+        case .search:
+            let cell = tableView.dequeue(NewsSearchTableViewCell.self, for: indexPath)
+            cell.configure(delegate: self)
+            return cell
         }
+    }
+}
+
+// MARK: - NewsSearchDelegate
+extension NewsListViewController: NewsSearchDelegate {
+    
+    func makeSearch(for text: String) {
+        viewModel?.makeSearch(for: text)
     }
 }
 
@@ -154,6 +169,7 @@ private extension NewsListViewController {
         tableView.refreshControl = refreshControl
         
         tableView.registerClass(forCell: NewsTableViewCell.self)
+        tableView.registerClass(forCell: NewsSearchTableViewCell.self)
         
         navigationItem.title = Constants.title
     }

@@ -8,12 +8,13 @@
 import Foundation
 
 enum NewsListElement {
-case news(Article)
+    case search
+    case news(Article)
 }
 
 enum NewsListSection: Equatable {
-case headers(_ elements: [NewsListElement])
-case basicElements(_ elements: [NewsListElement])
+    case headers(_ elements: [NewsListElement])
+    case basicElements(_ elements: [NewsListElement])
     
     var elements: [NewsListElement] {
         switch self {
@@ -43,6 +44,8 @@ protocol NewsListViewModeling {
     func numberOfElements(in section: Int) -> Int
     func getElement(at index: Int, section: Int) -> NewsListElement
     func refresh()
+    
+    func makeSearch(for text: String)
 }
 
 class NewsListViewModel: BaseViewModel {
@@ -113,6 +116,7 @@ extension NewsListViewModel: NewsListViewModeling {
     func refresh() {
         var tempSections = [NewsListSection]()
         
+        tempSections.append(.headers(getHeaderElements()))
         tempSections.append(.basicElements(getBasicElements()))
         
         sections = tempSections
@@ -120,10 +124,21 @@ extension NewsListViewModel: NewsListViewModeling {
         updateHandler?()
         getNews(for: searchText)
     }
+    
+    func makeSearch(for text: String) {
+        guard text != "" else { return }
+        getNews(for: searchText)
+    }
 }
 
 // MARK: Private
 private extension NewsListViewModel {
+    
+    func getHeaderElements() -> [NewsListElement] {
+        var headerElements: [NewsListElement] = []
+        headerElements.append(.search)
+        return headerElements
+    }
     
     func getBasicElements() -> [NewsListElement] {
         return articles.map { .news($0) }
