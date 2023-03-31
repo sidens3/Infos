@@ -60,10 +60,10 @@ private extension NewsSearchTableViewCell {
         contentView.addSubview(searchBar)
 
         NSLayoutConstraint.activate([
-            searchBar.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
-            searchBar.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            searchBar.trailingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: -16),
-            searchBar.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
+            searchBar.topAnchor.constraint(equalTo: contentView.topAnchor),
+            searchBar.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
+            searchBar.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
+            searchBar.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
 //            searchBar.heightAnchor.constraint(equalToConstant: 44),
         ])
         
