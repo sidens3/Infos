@@ -20,13 +20,19 @@ class NewsListViewController: BaseViewController {
         return tableView
     }()
     
-    
     private let indicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(frame: .zero)
         indicator.color = .systemBlue
         indicator.hidesWhenStopped = true
         indicator.translatesAutoresizingMaskIntoConstraints = false
         return indicator
+    }()
+    
+    private var refreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl(frame: .zero)
+        refreshControl.tintColor = .systemBlue
+        refreshControl.translatesAutoresizingMaskIntoConstraints = false
+        return refreshControl
     }()
     
 //    var router: NewsListRouting?
@@ -36,6 +42,7 @@ class NewsListViewController: BaseViewController {
                 DispatchQueue.main.async {
                     self?.tableView.reloadData()
                     self?.indicator.stopAnimating()
+                    self?.refreshControl.endRefreshing()
                 }
             }
             viewModel?.setBasicElementsUpdateHandler { [weak self] index in
@@ -68,6 +75,15 @@ extension NewsListViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        viewModel?.refresh()
+    }
+}
+
+// MARK: - Actions
+private extension NewsListViewController {
+    
+    @objc
+    func refresh() {
         viewModel?.refresh()
     }
 }
@@ -128,11 +144,14 @@ private extension NewsListViewController {
             indicator.centerYAnchor.constraint(equalTo: tableView.centerYAnchor)
         ])
         
+        refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
+        
         tableView.delegate = self
         tableView.dataSource = self
         tableView.separatorStyle = .none
         tableView.backgroundColor = .systemBackground
         tableView.rowHeight = UITableView.automaticDimension
+        tableView.refreshControl = refreshControl
         
         tableView.registerClass(forCell: NewsTableViewCell.self)
         
