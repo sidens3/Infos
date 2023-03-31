@@ -24,7 +24,6 @@ class NewsListViewController: BaseViewController {
     private let indicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(frame: .zero)
         indicator.color = .systemBlue
-        indicator.startAnimating()
         indicator.hidesWhenStopped = true
         indicator.translatesAutoresizingMaskIntoConstraints = false
         return indicator
@@ -37,6 +36,11 @@ class NewsListViewController: BaseViewController {
                 DispatchQueue.main.async {
                     self?.tableView.reloadData()
                     self?.indicator.stopAnimating()
+                }
+            }
+            viewModel?.setBasicElementsUpdateHandler { [weak self] index in
+                DispatchQueue.main.async {
+                    self?.tableView.reloadSections(IndexSet(integer: index), with: .automatic)
                 }
             }
             viewModel?.setUpdateIndicatorHandler { [weak self] isLoading in

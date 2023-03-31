@@ -13,9 +13,17 @@ protocol NewsManaging {
 }
 
 extension NetworkManager: NewsManaging {
+    
+    private enum Constants {
+        static let everythingUrlPath = "everything"
+    }
+    
+    
     func requestNews(query: String, completion: @escaping ((Result<News, Error>) -> Void)) {
         var url = newsURL
-        url.path.append("&\(query)")
+        
+        url.path.append("/\(Constants.everythingUrlPath)")
+        url.queryItems?.append(URLQueryItem(name: "q", value: query))
         performRequest(url: url, completion: completion)
     }
 }

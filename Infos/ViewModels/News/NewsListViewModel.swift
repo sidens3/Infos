@@ -59,7 +59,14 @@ class NewsListViewModel: BaseViewModel {
     private var errorHandler: ((String) -> Void)?
     private var sections = [NewsListSection]()
     
-    private var articles: [Article] = []
+    private var searchText: String = "apple" // TODO: Stub
+    
+    private var totalResults: Int = 0
+    private var articles: [Article] = [] {
+        didSet {
+            updateBasicElements()
+        }
+    }
     
     // MARK: Init
     init(networkManager: NewsManaging) {
@@ -111,6 +118,7 @@ extension NewsListViewModel: NewsListViewModeling {
         sections = tempSections
         updateIndicatorHandler?(true)
         updateHandler?()
+        getNews(for: searchText)
     }
 }
 
@@ -132,12 +140,16 @@ private extension NewsListViewModel {
     }
     
     func getNews(for text: String) {
+        updateIndicatorHandler?(true)
         networkManager.requestNews(query: text) { [weak self] result in
             switch result {
             case .success(let value):
-                print(value)
+                self?.articles = value.articles
+                self?.totalResults = value.totalResults
+                self?.updateIndicatorHandler?(false)
             case .failure(let error):
                 self?.errorHandler?(error.localizedDescription)
+                self?.updateIndicatorHandler?(false)
             }
         }
     }

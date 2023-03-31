@@ -24,10 +24,14 @@ class NetworkManager {
         urlComponents.host = Constants.host
         urlComponents.path = "/\(Constants.endpointVersion)"
         urlComponents.queryItems = [
-            URLQueryItem(name: "api_key", value: Constants.token)
+            URLQueryItem(name: "apiKey", value: Constants.token)
         ]
         return urlComponents
     }
+    
+    static let shared = NetworkManager()
+    
+    private init() {}
     
     func performRequest<T: Decodable>(url: URLComponents, completion: @escaping(Result<T, Error>) -> Void )  {
         AF.request(url)
