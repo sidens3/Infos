@@ -85,13 +85,21 @@ extension NewsDetailsViewController: UITableViewDataSource {
         
         switch element {
         case .image(let text):
-            return UITableViewCell()
+            let cell = tableView.dequeue(NewsDetailsImageTableViewCell.self, for: indexPath)
+            cell.configure(urlToImage: text)
+            return cell
         case .title(let text):
-            return UITableViewCell()
+            let cell = tableView.dequeue(NewsDetailsTitleTableViewCell.self, for: indexPath)
+            cell.configure(title: text)
+            return cell
         case .description(let text):
-            return UITableViewCell()
+            let cell = tableView.dequeue(NewsDetailsDescriptionTableViewCell.self, for: indexPath)
+            cell.configure(description: text)
+            return cell
         case .content(let text):
-            return UITableViewCell()
+            let cell = tableView.dequeue(NewsDetailsContentTableViewCell.self, for: indexPath)
+            cell.configure(content: text)
+            return cell
         }
     }
 }
@@ -118,7 +126,10 @@ private extension NewsDetailsViewController {
         tableView.backgroundColor = .systemBackground
         tableView.rowHeight = UITableView.automaticDimension
         
-        tableView.registerClass(forCell: UITableViewCell.self)
+        tableView.registerClass(forCell: NewsDetailsImageTableViewCell.self)
+        tableView.registerClass(forCell: NewsDetailsTitleTableViewCell.self)
+        tableView.registerClass(forCell: NewsDetailsDescriptionTableViewCell.self)
+        tableView.registerClass(forCell: NewsDetailsContentTableViewCell.self)
         
         navigationItem.title = Constants.title
     }

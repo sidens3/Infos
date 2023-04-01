@@ -33,11 +33,10 @@ class NewsTableViewCell: BaseTableViewCell {
     
     func configure(for article: Article) {
         setupSubviews()
-        
-        titleLabel.text = article.title
         fetchImage(by: article.urlToImage ?? "") { [weak self] image in
             self?.newsImageView.image = image
         }
+        titleLabel.text = article.title
     }
 }
 
