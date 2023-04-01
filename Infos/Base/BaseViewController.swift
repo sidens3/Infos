@@ -15,6 +15,7 @@ extension BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupStyle()
+        hideKeyboardWhenTappedAround()
     }
 }
 
@@ -27,6 +28,21 @@ extension BaseViewController {
             actions.forEach { alert.addAction($0) }
             self?.present(alert, animated: true, completion: nil)
         }
+    }
+}
+
+// MARK: - Keyboard
+extension BaseViewController {
+
+    func hideKeyboardWhenTappedAround() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+    }
+
+    @objc
+    func dismissKeyboard() {
+        view.endEditing(true)
     }
 }
 
