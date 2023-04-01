@@ -12,6 +12,7 @@ enum NewsDetailsElement {
     case title(String)
     case description(String)
     case content(String)
+    case webMore
 }
 
 enum NewsDetailsSection {
@@ -29,11 +30,14 @@ enum NewsDetailsSection {
 protocol NewsDetailsViewModeling {
     func setUpdateHandler(_ handler: (() -> Void)?)
     func setUpdateIndicatorHandler(_ handler: @escaping ((Bool) -> Void))
+    func setSelectWebMoreHandler(_ handler: ((String) -> Void)?)
     func setErrorHandler(_ handler: ((String) -> Void)?)
     func numberOfSections() -> Int
     func numberOfElements(in section: Int) -> Int
     func getElement(at index: Int, section: Int) -> NewsDetailsElement
     func refresh()
+    
+    func selectWebMore()
 }
 
 class NewsDetailsViewModel: BaseViewModel {
@@ -44,7 +48,9 @@ class NewsDetailsViewModel: BaseViewModel {
     
     private var updateHandler: (() -> Void)?
     private var updateIndicatorHandler: ((Bool) -> Void)?
+    private var selectWebMoreHandler: ((String) -> Void)?
     private var errorHandler: ((String) -> Void)?
+    
     private let data: Article
     private var sections = [NewsDetailsSection]()
     
@@ -64,6 +70,10 @@ extension NewsDetailsViewModel: NewsDetailsViewModeling {
     
     func setUpdateIndicatorHandler(_ handler: @escaping ((Bool) -> Void)) {
         updateIndicatorHandler = handler
+    }
+    
+    func setSelectWebMoreHandler(_ handler: ((String) -> Void)?) {
+        selectWebMoreHandler = handler
     }
     
     func setErrorHandler(_ handler: ((String) -> Void)?) {
@@ -94,6 +104,15 @@ extension NewsDetailsViewModel: NewsDetailsViewModeling {
         updateIndicatorHandler?(true)
         updateHandler?()
     }
+    
+    func selectWebMore() {
+        guard let urlString = data.url else {
+            errorHandler?(Constants.sthWentWrongErrorMessage)
+            return
+        }
+        
+        selectWebMoreHandler?(urlString)
+    }
 }
 
 // MARK: Private
@@ -114,6 +133,10 @@ private extension NewsDetailsViewModel {
         
         if let content = data.content {
             basicElements.append(.content(content))
+        }
+        
+        if let url = data.url {
+            basicElements.append(.webMore)
         }
         
         return basicElements

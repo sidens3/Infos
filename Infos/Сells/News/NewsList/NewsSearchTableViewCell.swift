@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol NewsSearchDelegate {
+protocol NewsSearchDelegate: AnyObject {
     func makeSearch(for text: String)
 }
 
@@ -23,7 +23,7 @@ class NewsSearchTableViewCell: BaseTableViewCell {
         return searchBar
     }()
     
-    var delegate: NewsSearchDelegate?
+    private weak var delegate: NewsSearchDelegate?
     
     func configure(delegate: NewsSearchDelegate?) {
         setupSubviews()

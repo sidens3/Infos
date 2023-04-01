@@ -20,7 +20,6 @@ class NewsDetailsViewController: BaseViewController {
         return tableView
     }()
     
-    
     private let indicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(frame: .zero)
         indicator.color = .systemBlue
@@ -30,6 +29,7 @@ class NewsDetailsViewController: BaseViewController {
         return indicator
     }()
     
+    var router: NewsDetailsRouting?
     var viewModel: NewsDetailsViewModeling? {
         didSet {
             viewModel?.setUpdateHandler { [weak self] in
@@ -41,6 +41,11 @@ class NewsDetailsViewController: BaseViewController {
             viewModel?.setUpdateIndicatorHandler { [weak self] isLoading in
                 DispatchQueue.main.async { [weak self] in
                     isLoading ? self?.indicator.startAnimating() : self?.indicator.stopAnimating()
+                }
+            }
+            viewModel?.setSelectWebMoreHandler { url in
+                DispatchQueue.main.async { [weak self] in
+                    self?.router?.presentWebDetails(for: url)
                 }
             }
             viewModel?.setErrorHandler({ [weak self] text in
@@ -100,7 +105,19 @@ extension NewsDetailsViewController: UITableViewDataSource {
             let cell = tableView.dequeue(NewsDetailsContentTableViewCell.self, for: indexPath)
             cell.configure(content: text)
             return cell
+        case .webMore:
+            let cell = tableView.dequeue(NewsDetailsWebMoreTableViewCell.self, for: indexPath)
+            cell.configure(delegate: self)
+            return cell
         }
+    }
+}
+
+// MARK: - NewsDetailsWebMoreDelegate
+extension NewsDetailsViewController: NewsDetailsWebMoreDelegate {
+    
+    func webMorePressed() {
+        viewModel?.selectWebMore()
     }
 }
 
@@ -130,6 +147,7 @@ private extension NewsDetailsViewController {
         tableView.registerClass(forCell: NewsDetailsTitleTableViewCell.self)
         tableView.registerClass(forCell: NewsDetailsDescriptionTableViewCell.self)
         tableView.registerClass(forCell: NewsDetailsContentTableViewCell.self)
+        tableView.registerClass(forCell: NewsDetailsWebMoreTableViewCell.self)
         
         navigationItem.title = Constants.title
     }

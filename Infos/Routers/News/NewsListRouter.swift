@@ -18,6 +18,7 @@ extension NewsListRouter: NewsListRouting {
     func presentNewsDetails(for article: Article) {
         let controller = NewsDetailsViewController()
         controller.viewModel = NewsDetailsViewModel(data: article)
+        controller.router = NewsDetailsRouter(viewController: controller)
         viewController?.show(controller, sender: nil)
     }
 }
