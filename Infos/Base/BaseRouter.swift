@@ -13,9 +13,5 @@ class BaseRouter {
 
     public init(viewController: BaseViewController) {
         self.viewController = viewController
-//        viewController.segueHandler = { [weak self] (segue, sender) in
-//            self?.prepare(for: segue, sender: sender)
-//            NotificationCenter.default.post(Notification(name: Notification.visibleControllerChanged))
-//        }
     }
 }
