@@ -50,8 +50,8 @@ private extension NewsDetailsImageTableViewCell {
             newsImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             newsImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
             
-            newsImageView.heightAnchor.constraint(equalToConstant: 120),
-            newsImageView.widthAnchor.constraint(equalToConstant: 120)
+            newsImageView.heightAnchor.constraint(equalToConstant: 240),
+            newsImageView.widthAnchor.constraint(equalToConstant: 160)
         ])
         
         setupStyle()
