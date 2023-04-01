@@ -52,9 +52,14 @@ class NewsListViewModel: BaseViewModel {
     
     private enum Constants {
         static let sthWentWrongErrorMessage = "Ой, что-то пошло не так"
+        static let minSearchCharactersCount = 2
+        static let searchDelayTimeInterval: DispatchTimeInterval = .milliseconds(500)
+        static let defaultSearchText = "Недавнее"
     }
     
     private let networkManager: NewsManaging
+    
+    private var newsWorkItem: DispatchWorkItem?
     
     private var updateHandler: (() -> Void)?
     private var basicElementsUpdateHandler: ((Int) -> Void)?
@@ -62,7 +67,12 @@ class NewsListViewModel: BaseViewModel {
     private var errorHandler: ((String) -> Void)?
     private var sections = [NewsListSection]()
     
-    private var searchText: String = "apple" // TODO: Stub
+    private var searchText: String = Constants.defaultSearchText {
+        didSet {
+            newsWorkItem?.cancel()
+            makeSearch(for: searchText)
+        }
+    }
     
     private var totalResults: Int = 0
     private var articles: [Article] = [] {
@@ -114,20 +124,20 @@ extension NewsListViewModel: NewsListViewModeling {
     }
     
     func refresh() {
-        var tempSections = [NewsListSection]()
+        updateSections()
+        resetSearchText()
         
-        tempSections.append(.headers(getHeaderElements()))
-        tempSections.append(.basicElements(getBasicElements()))
-        
-        sections = tempSections
         updateIndicatorHandler?(true)
         updateHandler?()
-        getNews(for: searchText)
     }
     
     func makeSearch(for text: String) {
-        guard text != "" else { return }
-        getNews(for: searchText)
+        guard text.count > Constants.minSearchCharactersCount else { return }
+        let workItem = DispatchWorkItem { [weak self] in
+            self?.getNews(for: text)
+        }
+        newsWorkItem = workItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + Constants.searchDelayTimeInterval, execute: workItem)
     }
 }
 
@@ -142,6 +152,20 @@ private extension NewsListViewModel {
     
     func getBasicElements() -> [NewsListElement] {
         return articles.map { .news($0) }
+    }
+    
+    func updateSections() {
+        var tempSections = [NewsListSection]()
+        
+        tempSections.append(.headers(getHeaderElements()))
+        tempSections.append(.basicElements(getBasicElements()))
+        
+        sections = tempSections
+    }
+    
+    func resetSearchText() {
+        searchText.removeAll()
+        makeSearch(for: Constants.defaultSearchText)
     }
     
     func updateBasicElements() {
