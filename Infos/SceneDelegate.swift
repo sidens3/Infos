@@ -17,6 +17,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: scene as! UIWindowScene)
         let newsListController = NewsListViewController()
         newsListController.viewModel = NewsListViewModel(networkManager: NetworkManager.shared)
+        newsListController.router = NewsListRouter(viewController: newsListController)
         let navigationController = UINavigationController(rootViewController: newsListController)
         window.rootViewController = navigationController
         

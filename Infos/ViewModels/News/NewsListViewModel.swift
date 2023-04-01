@@ -39,13 +39,16 @@ protocol NewsListViewModeling {
     func setUpdateHandler(_ handler: (() -> Void)?)
     func setBasicElementsUpdateHandler(_ handler: @escaping ((Int) -> Void))
     func setUpdateIndicatorHandler(_ handler: @escaping ((Bool) -> Void))
+    func setSelectNewsHandler(_ handler: @escaping ((Article) -> Void))
     func setErrorHandler(_ handler: ((String) -> Void)?)
+    
     func numberOfSections() -> Int
     func numberOfElements(in section: Int) -> Int
     func getElement(at index: Int, section: Int) -> NewsListElement
     func refresh()
     
     func makeSearch(for text: String)
+    func selectNews(by index: Int)
 }
 
 class NewsListViewModel: BaseViewModel {
@@ -64,6 +67,7 @@ class NewsListViewModel: BaseViewModel {
     private var updateHandler: (() -> Void)?
     private var basicElementsUpdateHandler: ((Int) -> Void)?
     private var updateIndicatorHandler: ((Bool) -> Void)?
+    private var selectNewsHandler: ((Article) -> Void)?
     private var errorHandler: ((String) -> Void)?
     private var sections = [NewsListSection]()
     
@@ -104,6 +108,10 @@ extension NewsListViewModel: NewsListViewModeling {
         updateIndicatorHandler = handler
     }
     
+    func setSelectNewsHandler(_ handler: @escaping ((Article) -> Void)) {
+        selectNewsHandler = handler
+    }
+    
     func setErrorHandler(_ handler: ((String) -> Void)?) {
         errorHandler = handler
     }
@@ -138,6 +146,11 @@ extension NewsListViewModel: NewsListViewModeling {
         }
         newsWorkItem = workItem
         DispatchQueue.main.asyncAfter(deadline: .now() + Constants.searchDelayTimeInterval, execute: workItem)
+    }
+    
+    func selectNews(by index: Int) {
+        guard articles.count > index else { return }
+        selectNewsHandler?(articles[index])
     }
 }
 

@@ -35,7 +35,7 @@ class NewsListViewController: BaseViewController {
         return refreshControl
     }()
     
-//    var router: NewsListRouting?
+    var router: NewsListRouting?
     var viewModel: NewsListViewModeling? {
         didSet {
             viewModel?.setUpdateHandler { [weak self] in
@@ -53,6 +53,11 @@ class NewsListViewController: BaseViewController {
             viewModel?.setUpdateIndicatorHandler { [weak self] isLoading in
                 DispatchQueue.main.async { [weak self] in
                     isLoading ? self?.indicator.startAnimating() : self?.indicator.stopAnimating()
+                }
+            }
+            viewModel?.setSelectNewsHandler { [weak self] article in
+                DispatchQueue.main.async { [weak self] in
+                    self?.router?.presentNewsDetails(for: article)
                 }
             }
             viewModel?.setErrorHandler({ [weak self] text in
@@ -97,8 +102,7 @@ extension NewsListViewController: UITableViewDelegate {
         
         switch element {
         case .news:
-            // TODO: add navigate to news details
-            break
+            viewModel.selectNews(by: indexPath.row)
         case .search:
             break
         }
