@@ -13,7 +13,7 @@ class NewsDetailsImageTableViewCell: BaseTableViewCell {
     // MARK: - UI elements
     private var newsImageView: UIImageView = {
         let imageView = UIImageView(frame: .zero)
-        imageView.image = UIImage(named: "arrow.triangle.2.circlepath.camera")
+        imageView.image = UIImage(named: "placeholder")
         imageView.layer.cornerRadius = 16
         imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
